@@ -1,4 +1,4 @@
-   // Script para el menú móvil
+    // Script para el menú móvil
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         const openIcon = document.getElementById('menu-open-icon');

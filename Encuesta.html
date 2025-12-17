@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Satisfacción</title>
+    <!-- Importar la fuente Inter de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Variables de Tema (CSS Puro) --- */
+        :root {
+            /* Tema Claro (Default) */
+            --bg-color: #f3f4f6; /* gris-100 */
+            --card-bg-color: #ffffff; /* blanco */
+            --text-primary: #1f2937; /* gris-800 */
+            --text-secondary: #4b5563; /* gris-600 */
+            --border-color: #d1d5db; /* gris-300 */
+            --accent-color: #2563eb; /* azul-600 */
+            --accent-hover: #1d4ed8; /* azul-700 */
+            --option-hover-bg: #f9fafb; /* gris-50 */
+        }
+
+        body.dark-mode {
+            /* Tema Oscuro */
+            --bg-color: #111827; /* gris-900 */
+            --card-bg-color: #1f2937; /* gris-800 */
+            --text-primary: #f9fafb; /* gris-50 */
+            --text-secondary: #9ca3af; /* gris-400 */
+            --border-color: #4b5563; /* gris-600 */
+            --accent-color: #3b82f6; /* azul-500 */
+            --accent-hover: #2563eb; /* azul-600 */
+            --option-hover-bg: #374151; /* gris-700 */
+        }
+        /* --- Fin Variables de Tema --- */
+
+        /* Reseteo básico y estilos globales */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Contenedor principal */
+        .container {
+            width: 100%;
+            max-width: 640px; /* Equivalente a max-w-lg */
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Tarjeta de la encuesta */
+        .survey-card {
+            background-color: var(--card-bg-color);
+            padding: 2rem; /* p-8 */
+            border-radius: 16px; /* rounded-2xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            width: 100%;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Botón de Tema */
+        #theme-switcher-container {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        #theme-toggle {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        #theme-toggle:hover {
+            background-color: var(--option-hover-bg);
+            border-color: var(--text-secondary);
+        }
+        #theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Ocultar/mostrar iconos de tema */
+        .dark-mode .moon-icon { display: none; }
+        .dark-mode .sun-icon { display: block; }
+        body:not(.dark-mode) .moon-icon { display: block; }
+        body:not(.dark-mode) .sun-icon { display: none; }
+
+
+        /* Encabezados */
+        h1 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem; /* mb-2 */
+            text-align: center;
+        }
+
+        .description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem; /* mb-8 */
+            text-align: center;
+        }
+
+        /* Estructura del formulario */
+        form fieldset {
+            border: none;
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+
+        form legend {
+            display: block;
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem; /* space-y-3 */
+        }
+
+        /* Estilo de las opciones (radio/checkbox) */
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem; /* p-3 */
+            border: 1px solid var(--border-color);
+            border-radius: 8px; /* rounded-lg */
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .option-label:hover {
+            background-color: var(--option-hover-bg);
+        }
+
+        .form-radio, .form-checkbox {
+            width: 1.25rem; /* h-5 w-5 */
+            height: 1.25rem;
+            margin-right: 0.75rem; /* ml-3 */
+            accent-color: var(--accent-color); /* Color del check/radio */
+        }
+        .form-checkbox {
+            border-radius: 4px; /* rounded */
+        }
+
+        /* Campo de texto */
+        .form-group {
+             margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .form-group label {
+            display: block;
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px; /* rounded-lg */
+            background-color: transparent;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3); /* focus:ring */
+        }
+
+        /* Botón de envío */
+        button[type="submit"] {
+            width: 100%;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px; /* rounded-lg */
+            font-weight: 600;
+            font-size: 1.125rem; /* text-lg */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+        }
+        button[type="submit"]:hover {
+            background-color: var(--accent-hover);
+        }
+        button[type="submit"]:focus {
+             outline: none;
+             box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.4);
+        }
+
+
+        /* Mensaje de agradecimiento */
+        #thank-you-message {
+            text-align: center;
+        }
+        #thank-you-message svg {
+            margin: 0 auto;
+            width: 4rem; /* h-16 w-16 */
+            height: 4rem;
+            color: #10b981; /* text-green-500 */
+        }
+        #thank-you-message h2 {
+            margin-top: 1rem; /* mt-4 */
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700;
+        }
+        #thank-you-message p {
+            margin-top: 0.5rem; /* mt-2 */
+            font-size: 1.125rem; /* text-lg */
+            color: var(--text-secondary);
+        }
+
+        /* Clase de utilidad */
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="survey-card">
+            
+            <!-- Botón para cambiar tema -->
+            <div id="theme-switcher-container">
+                <button id="theme-toggle" title="Cambiar tema">
+                    <!-- Icono de Luna (Oscuro) -->
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                    </svg>
+                    <!-- Icono de Sol (Claro) -->
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H.75m.386-6.364l1.591 1.591M12 5.25A6.75 6.75 0 005.25 12a6.75 6.75 0 006.75 6.75s6.75-3.029 6.75-6.75A6.75 6.75 0 0012 5.25z" />
+                    </svg>                      
+                </button>
+            </div>
+
+            <!-- Contenedor del formulario -->
+            <div id="survey-container">
+                <h1>Encuesta de Satisfacción</h1>
+                <p class="description">Tus comentarios son importantes para nosotros.</p>
+
+                <form id="surveyForm">
+                    <!-- Pregunta 1: Nivel de Satisfacción (Botones de Radio) -->
+                    <fieldset>
+                        <legend>1. ¿Cuál es tu nivel general de satisfacción?</legend>
+                        <div class="options-group">
+                            <label class="option-label">
+                                <input type="radio" name="satisfaction" value="muy-satisfecho" class="form-radio" required>
+                                <span>Muy Satisfecho</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="satisfaction" value="satisfecho" class="form-radio">
+                                <span>Satisfecho</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="satisfaction" value="neutral" class="form-radio">
+                                <span>Neutral</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="satisfaction" value="insatisfecho" class="form-radio">
+                                <span>Insatisfecho</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="satisfaction" value="muy-insatisfecho" class="form-radio">
+                                <span>Muy Insatisfecho</span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <!-- Pregunta 2: Aspectos Destacados (Checkboxes) -->
+                    <fieldset>
+                        <legend>2. ¿Qué aspectos destacas de nuestro servicio?</legend>
+                        <div class="options-group">
+                            <label class="option-label">
+                                <input type="checkbox" name="features" value="calidad" class="form-checkbox">
+                                <span>Calidad del producto/servicio</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="checkbox" name="features" value="precio" class="form-checkbox">
+                                <span>Relación calidad-precio</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="checkbox" name="features" value="atencion" class="form-checkbox">
+                                <span>Atención al cliente</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="checkbox" name="features" value="facilidad" class="form-checkbox">
+                                <span>Facilidad de uso / Navegación</span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <!-- Pregunta 3: Comentarios (Textarea) -->
+                    <div class="form-group">
+                        <label for="comments">3. ¿Tienes algún comentario o sugerencia adicional?</label>
+                        <textarea id="comments" name="comments" rows="4" placeholder="Escribe tus comentarios aquí..."></textarea>
+                    </div>
+
+                    <!-- Botón de Envío -->
+                    <div>
+                        <button type="submit">
+                            Enviar Encuesta
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Mensaje de Agradecimiento (Oculto por defecto) -->
+            <div id="thank-you-message" class="hidden">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2>¡Gracias por tu respuesta!</h2>
+                <p>Valoramos tus comentarios y los usaremos para mejorar nuestro servicio.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- Lógica del Formulario ---
+        const surveyForm = document.getElementById('surveyForm');
+        const surveyContainer = document.getElementById('survey-container');
+        const thankYouMessage = document.getElementById('thank-you-message');
+
+        surveyForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevenir el envío real
+            const formData = new FormData(surveyForm);
+            const surveyData = {};
+
+            formData.forEach((value, key) => {
+                if (key === 'features') {
+                    if (!surveyData[key]) {
+                        surveyData[key] = [];
+                    }
+                    surveyData[key].push(value);
+                } else {
+                    surveyData[key] = value;
+                }
+            });
+
+            console.log("--- Resultados de la Encuesta (CSS Puro) ---");
+            console.log(surveyData);
+            console.log("JSON para enviar a un servidor:", JSON.stringify(surveyData));
+
+            surveyContainer.classList.add('hidden');
+            thankYouMessage.classList.remove('hidden');
+        });
+
+        // --- Lógica del Tema Claro/Oscuro ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Función para aplicar el tema guardado al cargar la página
+        function applySavedTheme() {
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                body.classList.add('dark-mode');
+            } else {
+                body.classList.remove('dark-mode'); // Asegura que esté en modo claro si no es 'dark'
+            }
+        }
+
+        // Manejar clic en el botón de tema
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            // Guardar la preferencia en localStorage
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Aplicar el tema al cargar la página
+        document.addEventListener('DOMContentLoaded', applySavedTheme);
+    </script>
+
+</body>
+</html>
+

@@ -17,25 +17,37 @@
 /* ...puedes agregar más variantes si lo deseas... */
 
 /* CSS Reset & Base Styles */
-        :root {
-            --color-bg-primary: #111827; /* bg-gray-900 */
-            --color-bg-secondary: #1f2937; /* bg-gray-800 */
-            --color-text-primary: #d1d5db; /* text-gray-300 */
-            --color-text-secondary: #9ca3af; /* text-gray-400 */
-            --color-text-white: #ffffff;
-            --color-accent: #38bdf8; /* text-sky-400 */
-            --color-accent-dark: #0ea5e9; /* bg-sky-500 */
-            --color-accent-hover: #0284c7; /* hover:bg-sky-600 */
-        }
-        
-        /* Light Theme Variables */
-        html[data-theme='light'] {
-            --color-bg-primary: #f9fafb; /* bg-gray-50 */
-            --color-bg-secondary: #ffffff; /* bg-white */
-            --color-text-primary: #1f2937; /* text-gray-800 */
-            --color-text-secondary: #4b5563; /* text-gray-600 */
-            --color-text-white: #111827; /* text-gray-900 for titles etc */
-        }
+:root {
+    --color-bg-primary: #111827;
+    /* bg-gray-900 */
+    --color-bg-secondary: #1f2937;
+    /* bg-gray-800 */
+    --color-text-primary: #d1d5db;
+    /* text-gray-300 */
+    --color-text-secondary: #9ca3af;
+    /* text-gray-400 */
+    --color-text-white: #ffffff;
+    --color-accent: #38bdf8;
+    /* text-sky-400 */
+    --color-accent-dark: #0ea5e9;
+    /* bg-sky-500 */
+    --color-accent-hover: #0284c7;
+    /* hover:bg-sky-600 */
+}
+
+/* Light Theme Variables */
+html[data-theme='light'] {
+    --color-bg-primary: #f9fafb;
+    /* bg-gray-50 */
+    --color-bg-secondary: #ffffff;
+    /* bg-white */
+    --color-text-primary: #1f2937;
+    /* text-gray-800 */
+    --color-text-secondary: #4b5563;
+    /* text-gray-600 */
+    --color-text-white: #111827;
+    /* text-gray-900 for titles etc */
+}
 
 #theme-toggle {
     background: none;
@@ -403,13 +415,80 @@ img {
     margin-bottom: 2rem;
 }
 
-/* Footer */
-footer {
+/* Estilos para autenticación */
+.auth-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--color-bg-secondary);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.modal-content h2 {
+    margin-bottom: 1.5rem;
+    color: var(--color-text-primary);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-primary);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--color-text-secondary);
+    border-radius: 0.25rem;
     background-color: var(--color-bg-primary);
-    padding: 1.5rem 0;
-    text-align: center;
-    color: #6b7280;
-    /* text-gray-500 */
+    color: var(--color-text-primary);
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Estilos para la autenticación en el nav */
+.auth-nav {
+    display: none;
+    /* Se mostrará en desktop */
+    gap: 1rem;
+    align-items: center;
+    margin-left: 2rem;
+}
+
+.auth-nav .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
 }
 
 /* Media Queries for Responsiveness */
@@ -480,6 +559,26 @@ footer {
     .portfolio-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .auth-nav {
+        display: flex;
+    }
+
+    /* Ocultar los botones de auth del menú móvil en desktop */
+    #mobile-menu .auth-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding: 2rem;
+        margin-top: auto;
+    }
+    /* Botones de autenticación móvil */
+#mobile-menu .auth-buttons button {
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+}
 }
 
 @media (min-width: 1024px) {

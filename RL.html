@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso de Rapid Learning</title>
+    
+    <!-- Estilos personalizados (CSS Puro) -->
+    <style>
+        /* Fuentes */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        /* --- 1. Variables de Tema (Modo Claro/Oscuro) --- */
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --border-color-translucent: rgba(0, 0, 0, 0.1);
+            --tertiary-bg-color: #f8f9fa;
+            --primary-color: #0d6efd;
+            --primary-subtle-bg: #cfe2ff;
+            --primary-subtle-border: #9ec5fe;
+            --success-color: #198754;
+            --success-subtle-bg: #d1e7dd;
+            --danger-color: #dc3545;
+            --danger-subtle-bg: #f8d7da;
+            --secondary-color: #6c757d;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg-color: #2c2c2c;
+            --text-color: #f8f9fa;
+            --text-muted-color: #adb5bd;
+            --border-color: #495057;
+            --border-color-translucent: rgba(255, 255, 255, 0.1);
+            --tertiary-bg-color: #343a40;
+            --primary-color: #4dabf7;
+            --primary-subtle-bg: #1c3b5a;
+            --primary-subtle-border: #2a5a8a;
+            --success-color: #40c057;
+            --success-subtle-bg: #1a4a2a;
+            --danger-color: #fa5252;
+            --danger-subtle-bg: #5a1c22;
+            --secondary-color: #868e96;
+        }
+
+        /* --- 2. Estilos Base --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.25rem; /* similar a display-5 */
+        }
+        
+        p {
+            font-size: 1.1rem;
+            color: var(--text-muted-color);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        button {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.6rem 1.25rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* --- 3. Contenedor Principal --- */
+        #course-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--card-bg-color);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        #course-content {
+            padding: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            #course-content {
+                padding: 2.5rem;
+            }
+        }
+        
+        .course-slide.d-none {
+            display: none;
+        }
+
+        /* --- 4. Botón de Tema --- */
+        #theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 10;
+            padding: 0.5rem;
+            line-height: 1;
+            background-color: var(--tertiary-bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        #theme-toggle svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        #theme-toggle .d-none {
+            display: none;
+        }
+
+        /* --- 5. Estilos de Diapositivas --- */
+
+        /* Diapositiva 1 */
+        .info-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--primary-subtle-bg);
+            border-left: 5px solid var(--primary-subtle-border);
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .info-box p {
+            margin-bottom: 0;
+            color: var(--text-color);
+        }
+
+        /* Diapositiva 2 */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color-translucent);
+            box-shadow: var(--shadow);
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .video-caption {
+            font-size: 0.9rem;
+            color: var(--text-muted-color);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        
+        /* Diapositiva 3 */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .feature-card {
+            height: 100%;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color-translucent);
+            background-color: var(--tertiary-bg-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .feature-card svg {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .feature-card h5 {
+            font-size: 1.25rem;
+            color: var(--text-color);
+        }
+        .feature-card p {
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+        
+        /* Diapositiva 4 (Quiz) */
+        .quiz-question {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background-color: var(--tertiary-bg-color);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color-translucent);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .quiz-question legend {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .form-check input {
+            margin-right: 0.5rem;
+            width: 1.15em;
+            height: 1.15em;
+        }
+        .form-check label {
+            color: var(--text-color);
+        }
+        
+        .form-control-lg {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+        }
+        @media (min-width: 640px) {
+            .form-control-lg-container {
+                width: 75%;
+            }
+        }
+        
+        #btn-score-quiz {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.1rem;
+        }
+        #btn-score-quiz:hover {
+            opacity: 0.85;
+        }
+
+        #quiz-results {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            text-align: center;
+        }
+        #quiz-results.alert-success {
+            background-color: var(--success-subtle-bg);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+        #quiz-results.alert-danger {
+            background-color: var(--danger-subtle-bg);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+        #quiz-results p {
+            margin: 0;
+            color: inherit;
+        }
+        
+        /* Diapositiva 5 */
+        .certificate-box {
+            padding: 1.5rem;
+            background-color: var(--tertiary-bg-color);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+        .certificate-box h3 {
+            color: var(--text-color);
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        @media (min-width: 640px) {
+            .input-group {
+                flex-direction: row;
+            }
+        }
+        .input-group input {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            font-size: 1.1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+        }
+        #download-cert-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+        #download-cert-btn:hover {
+            opacity: 0.85;
+        }
+        
+        /* --- 6. Navegación/Footer --- */
+        #course-navigation {
+            background-color: var(--tertiary-bg-color);
+            padding: 1rem;
+            border-top: 1px solid var(--border-color-translucent);
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: var(--border-color);
+            border-radius: 0.25rem;
+            height: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color);
+            border-radius: 0.25rem;
+            transition: width 0.4s ease;
+        }
+        
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-status {
+            font-size: 0.9rem;
+            color: var(--text-muted-color);
+        }
+        #btn-prev {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        #btn-next {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #btn-prev:hover, #btn-next:hover {
+            opacity: 0.85;
+        }
+
+    </style>
+</head>
+<body class="bg-body-tertiary">
+
+    <!-- Contenedor principal del curso -->
+    <div id="course-container">
+        
+        <!-- Botón de Tema (Claro/Oscuro) -->
+        <button id="theme-toggle" title="Cambiar tema">
+            <!-- Icono Sol -->
+            <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m-4.61-1.61a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L3.39 13.7a.5.5 0 0 1 0-.707m10.607 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0M1.61 3.39a.5.5 0 0 1 0 .707L3.025 5.505a.5.5 0 1 1-.707.707L.904 4.096a.5.5 0 0 1 .707-.707m12.782 0a.5.5 0 0 1 .707.707l-1.414 1.414a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 0-.707M4 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 4 8m8 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m-5 4a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m.15-8.85a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 1 1-.707.707L7.39 3.39a.5.5 0 0 1 0-.707m2.828 0a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L10.217 3.39a.5.5 0 0 1 .707-.707"/>
+            </svg>
+            <!-- Icono Luna -->
+            <svg id="theme-icon-moon" class="d-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
+                <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.63l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 12.31 3.63l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097z"/>
+            </svg>
+        </button>
+        
+        <!-- Contenido del curso que cambia (diapositivas) -->
+        <div id="course-content">
+
+            <!-- Diapositiva 1: Introducción -->
+            <section id="slide-1" class="course-slide">
+                <h1>Bienvenido al Curso de Rapid Learning</h1>
+                <p>
+                    ¡Hola! En este mini-curso interactivo, descubrirás qué es el "Rapid Learning" (Aprendizaje Rápido) y cómo este formato está cambiando la forma en que adquirimos nuevas habilidades.
+                </p>
+                <p style="color: var(--text-color);">
+                    El Rapid Learning se basa en la idea de entregar contenido educativo en pequeñas "píldoras" de conocimiento, diseñadas para ser consumidas rápidamente y justo en el momento en que se necesitan.
+                </p>
+                <div class="info-box">
+                    <p>
+                        <span style="font-weight: 600;">Objetivo:</span> Entender los principios, beneficios y estructura de un módulo de aprendizaje rápido.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Diapositiva 2: Descripción y Video -->
+            <section id="slide-2" class="course-slide d-none">
+                <h1>¿Qué es el Rapid Learning? (Video)</h1>
+                <p>
+                    El Rapid Learning (a menudo relacionado con el Microlearning) se enfoca en objetivos de aprendizaje muy específicos. En lugar de un curso de 8 horas sobre "Marketing Digital", tendrías un módulo de 5 minutos sobre "¿Cómo escribir un buen título para un anuncio?".
+                </p>
+                <!--  -->
+                <div class="video-wrapper">
+                    <!-- Usamos un video real de YouTube que explica el Microlearning, un concepto clave -->
+                    <iframe 
+                        src="https://www.youtube.com/embed/cnipGcM5C34" 
+                        title="¿Qué es el Microlearning?" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <p class="video-caption">Video explicativo sobre un concepto similar: Microlearning.</p>
+            </section>
+
+            <!-- Diapositiva 3: Descripciones y Gráficos -->
+            <section id="slide-3" class="course-slide d-none">
+                <h1>Características Clave (Gráficos)</h1>
+                <p>
+                    El formato de Rapid Learning se sostiene sobre tres pilares fundamentales que lo hacen tan efectivo en el entorno laboral moderno.
+                </p>
+                <!-- [Image of 'infographic data'] -->
+                <!-- Sección de "gráficos" simulada con tarjetas -->
+                <div class="features-grid">
+                    <!-- Tarjeta 1: Enfocado -->
+                    <div class="feature-card">
+                        <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-5a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"></path></svg>
+                        <h5>Enfocado</h5>
+                        <p>
+                            Cada módulo responde a <span style="font-weight: 600;">una sola pregunta</span> o enseña <span style="font-weight: 600;">una sola habilidad</span>.
+                        </p>
+                    </div>
+                    <!-- Tarjeta 2: Rápido -->
+                    <div class="feature-card">
+                        <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm1-13h-2v6h6v-2h-4V7z"></path></svg>
+                        <h5>Rápido</h5>
+                        <p>
+                            Generalmente duran <span style="font-weight: 600;">entre 3 y 7 minutos</span>. Diseñados para no interrumpir el flujo de trabajo.
+                        </p>
+                    </div>
+                    <!-- Tarjeta 3: Accesible -->
+                    <div class="feature-card">
+                        <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-5 18a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm3-3H9V5h6v12z"></path></svg>
+                        <h5>Accesible</h5>
+                        <p>
+                            Disponibles en cualquier dispositivo, especialmente <span style="font-weight: 600;">móviles</span>, para aprender "just-in-time".
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diapositiva 4: Sección de Preguntas (Quiz) -->
+            <section id="slide-4" class="course-slide d-none">
+                <h1>Prueba de Conocimiento</h1>
+                <p>
+                    Veamos qué has aprendido. Responde las siguientes preguntas. Necesitas al menos 3 correctas para avanzar.
+                </p>
+
+                <form id="quiz-form">
+                    <!-- Pregunta 1: Selección Simple -->
+                    <fieldset class="quiz-question">
+                        <legend>1. (Selección Simple) ¿Cuál es el enfoque principal del Rapid Learning?</legend>
+                        <div class="form-check">
+                            <input type="radio" id="q1-a" name="q1" value="a">
+                            <label for="q1-a">Cubrir temas muy extensos y complejos en una sola sesión.</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" id="q1-b" name="q1" value="b">
+                            <label for="q1-b">Entregar contenido corto, específico y enfocado a una habilidad.</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" id="q1-c" name="q1" value="c">
+                            <label for="q1-c">Reemplazar completamente la educación universitaria tradicional.</label>
+                        </div>
+                    </fieldset>
+
+                    <!-- Pregunta 2: Verdadero o Falso -->
+                    <fieldset class="quiz-question">
+                        <legend>2. (Verdadero o Falso) El Rapid Learning está diseñado para módulos que toman varios meses en completarse.</legend>
+                        <div class="form-check">
+                            <input type="radio" id="q2-true" name="q2" value="true">
+                            <label for="q2-true">Verdadero</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" id="q2-false" name="q2" value="false">
+                            <label for="q2-false">Falso</label>
+                        </div>
+                    </fieldset>
+
+                    <!-- Pregunta 3: Selección Múltiple -->
+                    <fieldset class="quiz-question">
+                        <legend>3. (Selección Múltiple) ¿Cuáles son beneficios clave del Rapid Learning? (Selecciona todos los que apliquen)</legend>
+                        <div class="form-check">
+                            <input type="checkbox" id="q3-a" name="q3" value="a">
+                            <label for="q3-a">Es rápido y no interrumpe mucho el trabajo.</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="q3-b" name="q3" value="b">
+                            <label for="q3-b">Es ideal para aprender temas filosóficos profundos.</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="q3-c" name="q3" value="c">
+                            <label for="q3-c">Suele ser accesible desde dispositivos móviles.</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="q3-d" name="q3" value="d">
+                            <label for="q3-d">Requiere un día entero de dedicación exclusiva.</label>
+                        </div>
+                    </fieldset>
+
+                    <!-- Pregunta 4: Completar la oración (Modificada) -->
+                    <fieldset class="quiz-question">
+                        <legend>4. (Completar) Un módulo de Rapid Learning suele durar unos 5 ____.</legend>
+                        <div class="form-control-lg-container">
+                            <label for="q4" style="display:none;">Respuesta</label>
+                            <input type="text" id="q4" name="q4" class="form-control-lg" placeholder="Escribe tu respuesta...">
+                        </div>
+                    </fieldset>
+
+                    <!-- Botón de calificar y resultados -->
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <button id="btn-score-quiz">
+                            Calificar mi Prueba
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Área de resultados del quiz (inicialmente oculta) -->
+                <div id="quiz-results" class="d-none" role="alert">
+                    <!-- El contenido se generará con JavaScript -->
+                </div>
+            </section>
+
+            <!-- Diapositiva 5: Finalización y Certificado -->
+            <section id="slide-5" class="course-slide d-none">
+                <h1 style="color: var(--success-color);">¡Felicidades!</h1>
+                <p>
+                    Has completado exitosamente el curso "Introducción al Rapid Learning". Ahora comprendes los fundamentos de este poderoso formato de aprendizaje.
+                </p>
+                
+                <div class="certificate-box">
+                    <h3>Descarga tu Certificado</h3>
+                    <p style="color: var(--text-color);">
+                        Escribe tu nombre completo como quieres que aparezca en el certificado y haz clic en descargar.
+                    </p>
+                    <div class="input-group">
+                        <label for="student-name" style="display:none;">Tu nombre:</label>
+                        <input 
+                            type="text" 
+                            id="student-name" 
+                            placeholder="Ej: Ana García Pérez"
+                        >
+                        <button id="download-cert-btn">
+                            Descargar Certificado
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </div> <!-- Fin de #course-content -->
+
+        <!-- Navegación del curso (Anterior / Siguiente) -->
+        <footer id="course-navigation">
+            
+            <!-- Barra de Progreso -->
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+
+            <div class="nav-controls">
+                <!-- Botón Anterior -->
+                <button id="btn-prev">
+                    Anterior
+                </button>
+                
+                <!-- Indicador de progreso -->
+                <div class="nav-status">
+                    Paso <span id="current-step">1</span> de <span id="total-steps">5</span>
+                </div>
+                
+                <!-- Botón Siguiente -->
+                <button id="btn-next">
+                    Siguiente
+                </button>
+            </div>
+        </footer>
+
+    </div> <!-- Fin de #course-container -->
+
+    <!-- Lógica de JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 0. Lógica del Tema (Claro/Oscuro) ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const sunIcon = document.getElementById('theme-icon-sun');
+            const moonIcon = document.getElementById('theme-icon-moon');
+            const docElement = document.documentElement;
+
+            // Función para aplicar el tema
+            const applyTheme = (theme) => {
+                docElement.setAttribute('data-theme', theme);
+                sunIcon.classList.toggle('d-none', theme === 'dark');
+                moonIcon.classList.toggle('d-none', theme === 'light');
+                localStorage.setItem('theme', theme); // Guardar preferencia
+            };
+
+            // Cargar tema guardado o preferido por el sistema
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const currentTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+            applyTheme(currentTheme);
+
+            // Evento del botón
+            themeToggle.addEventListener('click', () => {
+                const newTheme = docElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+
+
+            // --- 1. Estado y Selectores ---
+            let currentSlide = 0;
+            let quizPassed = false;
+            
+            const slides = document.querySelectorAll('.course-slide');
+            const totalSlides = slides.length;
+
+            // Botones de navegación
+            const btnNext = document.getElementById('btn-next');
+            const btnPrev = document.getElementById('btn-prev');
+
+            // Indicadores de pasos
+            const currentStepEl = document.getElementById('current-step');
+            const totalStepsEl = document.getElementById('total-steps');
+            const progressBar = document.getElementById('progress-bar');
+
+            // Elementos del Quiz
+            const quizForm = document.getElementById('quiz-form');
+            const btnScoreQuiz = document.getElementById('btn-score-quiz');
+            const quizResults = document.getElementById('quiz-results');
+
+            // Elementos del Certificado
+            const btnDownloadCert = document.getElementById('download-cert-btn');
+            const studentNameInput = document.getElementById('student-name');
+            
+            // Inicializar contador de pasos
+            totalStepsEl.textContent = totalSlides;
+
+            // --- 2. Funciones de Navegación ---
+
+            /**
+             * Muestra la diapositiva en el índice dado y oculta las demás.
+             * @param {number} index - El índice de la diapositiva a mostrar.
+             */
+            function showSlide(index) {
+                // Ocultar todas las diapositivas
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('d-none', i !== index);
+                });
+                
+                // Actualizar el estado
+                currentSlide = index;
+                currentStepEl.textContent = currentSlide + 1;
+                
+                // Actualizar barra de progreso
+                const progressPercent = ((index + 1) / totalSlides) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                
+                // Actualizar el estado de los botones de navegación
+                updateNavButtons();
+            }
+
+            /**
+             * Actualiza el estado (habilitado/deshabilitado) de los botones de navegación.
+             */
+            function updateNavButtons() {
+                // Botón Anterior: deshabilitado si es la primera diapositiva
+                btnPrev.disabled = (currentSlide === 0);
+
+                // Botón Siguiente: lógica especial
+                if (currentSlide === totalSlides - 1) {
+                    // Es la última diapositiva (Certificado)
+                    btnNext.disabled = true;
+                    btnNext.classList.add('d-none'); // Ocultarlo
+                } else if (currentSlide === 3 && !quizPassed) {
+                    // Es la diapositiva del quiz y no se ha pasado
+                    btnNext.disabled = true;
+                } else {
+                    // Cualquier otro caso
+                    btnNext.disabled = false;
+                    btnNext.classList.remove('d-none'); // Asegurarse de que sea visible
+                }
+            }
+
+            /**
+             * Avanza a la siguiente diapositiva.
+             */
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            }
+
+            /**
+             * Retrocede a la diapositiva anterior.
+             */
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1);
+                }
+            }
+            
+            // --- 3. Lógica del Quiz ---
+
+            /**
+             * Califica el cuestionario, muestra los resultados y habilita
+             * el botón "Siguiente" si se aprueba.
+             */
+            function scoreQuiz(e) {
+                e.preventDefault(); // Evitar que el formulario se envíe
+                
+                const formData = new FormData(quizForm);
+                let score = 0;
+                
+                // Definir respuestas correctas
+                const answers = {
+                    q1: 'b',
+                    q2: 'false',
+                    q3: ['a', 'c'],
+                    q4: ['minutos'] // Nueva respuesta para Q4
+                };
+
+                // 1. Calificar Q1 (Selección Simple)
+                if (formData.get('q1') === answers.q1) {
+                    score++;
+                }
+
+                // 2. Calificar Q2 (Verdadero/Falso)
+                if (formData.get('q2') === answers.q2) {
+                    score++;
+                }
+
+                // 3. Calificar Q3 (Selección Múltiple)
+                const q3Selected = formData.getAll('q3');
+                const q3Correct = q3Selected.length === 2 && 
+                                  q3Selected.includes(answers.q3[0]) && 
+                                  q3Selected.includes(answers.q3[1]);
+                if (q3Correct) {
+                    score++;
+                }
+
+                // 4. Calificar Q4 (Completar)
+                const q4Answer = formData.get('q4').toLowerCase().trim();
+                if (answers.q4.includes(q4Answer)) {
+                    score++;
+                }
+
+                // Mostrar resultados
+                quizResults.classList.remove('d-none');
+                const passScore = 3;
+                
+                // Limpiar clases de alerta previas
+                quizResults.classList.remove('alert-success', 'alert-danger');
+                
+                if (score >= passScore) {
+                    quizPassed = true;
+                    quizResults.innerHTML = `
+                        <p style="font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem;">¡Excelente! Tu puntaje: ${score} / 4</p>
+                        <p>Has aprobado. Ya puedes avanzar a la sección final.</p>
+                    `;
+                    quizResults.classList.add('alert-success');
+                    btnScoreQuiz.disabled = true; // Deshabilitar botón de calificar
+                } else {
+                    quizPassed = false;
+                    quizResults.innerHTML = `
+                        <p style="font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem;">Tu puntaje: ${score} / 4</p>
+                        <p>Necesitas al menos ${passScore} correctas para avanzar. ¡Inténtalo de nuevo!</p>
+                    `;
+                    quizResults.classList.add('alert-danger');
+                }
+                
+                // Actualizar botones (para habilitar "Siguiente" si se aprueba)
+                updateNavButtons();
+            }
+
+            // --- 4. Lógica del Certificado ---
+            
+            /**
+             * Genera un certificado en un canvas y lo descarga como PNG.
+             */
+            function downloadCertificate() {
+                const studentName = studentNameInput.value.trim() || "Estudiante Dedicado";
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 600;
+                const ctx = canvas.getContext('2d');
+                
+                // Detectar tema actual para el certificado
+                const isDark = docElement.getAttribute('data-theme') === 'dark';
+                // Obtener colores desde las variables CSS
+                const computedStyle = getComputedStyle(docElement);
+                const bgColor = computedStyle.getPropertyValue('--card-bg-color').trim();
+                const textColor = computedStyle.getPropertyValue('--text-color').trim();
+                const primaryColor = computedStyle.getPropertyValue('--primary-color').trim();
+                const accentColor = isDark ? '#f0c04a' : '#f0c04a'; // Dorado se mantiene
+
+                // 1. Fondo
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // 2. Borde decorativo
+                ctx.strokeStyle = primaryColor;
+                ctx.lineWidth = 15;
+                ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+                
+                ctx.strokeStyle = accentColor;
+                ctx.lineWidth = 5;
+                ctx.strokeRect(25, 25, canvas.width - 50, canvas.height - 50);
+
+                // 3. Títulos
+                ctx.fillStyle = primaryColor;
+                ctx.font = 'bold 48px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('CERTIFICADO', canvas.width / 2, 120);
+                
+                ctx.font = '30px Arial';
+                ctx.fillText('DE FINALIZACIÓN', canvas.width / 2, 170);
+
+                // 4. Cuerpo del texto
+                ctx.fillStyle = textColor;
+                ctx.font = '24px Arial';
+                ctx.fillText('Otorgado a:', canvas.width / 2, 250);
+
+                // 5. Nombre del estudiante
+                ctx.fillStyle = primaryColor;
+                ctx.font = 'italic bold 40px "Times New Roman"';
+                ctx.fillText(studentName, canvas.width / 2, 320);
+
+                // 6. Descripción
+                ctx.fillStyle = textColor;
+                ctx.font = '24px Arial';
+                ctx.fillText('Por completar exitosamente el curso', canvas.width / 2, 400);
+
+                ctx.font = 'bold 28px Arial';
+                ctx.fillText('"Introducción al Rapid Learning"', canvas.width / 2, 450);
+
+                // 7. Fecha
+                ctx.font = '20px Arial';
+                ctx.fillText(`Fecha: ${new Date().toLocaleDateString('es-ES')}`, canvas.width / 2, 530);
+
+                // 8. Crear y disparar la descarga
+                const link = document.createElement('a');
+                link.download = `Certificado_${studentName.replace(/ /g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }
+
+            // --- 5. Asignación de Eventos ---
+            btnNext.addEventListener('click', nextSlide);
+            btnPrev.addEventListener('click', prevSlide);
+            btnScoreQuiz.addEventListener('click', scoreQuiz);
+            btnDownloadCert.addEventListener('click', downloadCertificate);
+
+            // --- 6. Inicialización ---
+            showSlide(0); // Mostrar la primera diapositiva al cargar
+        });
+    </script>
+
+</body>
+</html>
+

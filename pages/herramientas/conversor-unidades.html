@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <title>Conversor de Unidades</title>
+    <style>
+        :root {
+            --bg: #111827;
+            --card: #1f2937;
+            --text: #d1d5db;
+            --title: #ffffff;
+            --accent: #38bdf8;
+            --border: rgba(255,255,255,0.1);
+            --input-bg: #374151;
+        }
+        html[data-theme='light'] {
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --text: #4b5563;
+            --title: #111827;
+            --border: #e5e7eb;
+            --input-bg: #f9fafb;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+        .top-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+        }
+        .top-nav .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            transition: background 0.2s;
+        }
+        .top-nav .back-link:hover { background: var(--input-bg); }
+        .top-nav .nav-title { flex: 1; text-align: center; font-weight: 600; color: var(--title); font-size: 0.9rem; }
+        .top-nav .theme-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .main-content { padding-top: 4rem; max-width: 480px; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; }
+        h1 { text-align: center; color: var(--title); margin: 2rem 0 1.5rem; font-size: 1.5rem; }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+        select, input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: var(--title);
+            font-size: 1rem;
+            font-family: system-ui, sans-serif;
+        }
+        select:focus, input:focus { outline: none; border-color: var(--accent); }
+        .field { margin-bottom: 1rem; }
+        .field label { display: block; color: var(--title); font-weight: 500; margin-bottom: 0.4rem; font-size: 0.9rem; }
+        .row { display: flex; gap: 0.75rem; align-items: end; }
+        .row .field { flex: 1; }
+        .swap-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--accent);
+            width: 40px; height: 40px;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            margin-bottom: 1rem;
+        }
+        .swap-btn:hover { background: var(--accent); color: white; }
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--input-bg);
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        .result .value { font-size: 1.75rem; font-weight: 700; color: var(--accent); }
+        .result .formula { font-size: 0.8rem; color: var(--text); margin-top: 0.25rem; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="../../" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Portafolio
+        </a>
+        <span class="nav-title">Conversor de Unidades</span>
+        <button class="theme-btn" id="themeToggle" title="Cambiar tema">🌓</button>
+    </nav>
+
+    <div class="main-content">
+        <h1>Conversor de Unidades</h1>
+
+        <div class="card">
+            <div class="field">
+                <label>Categoría</label>
+                <select id="category">
+                    <option value="length">Longitud</option>
+                    <option value="weight">Peso</option>
+                    <option value="temperature">Temperatura</option>
+                    <option value="volume">Volumen</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Cantidad</label>
+                <input type="number" id="amount" value="1" step="any">
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>De</label>
+                    <select id="from"></select>
+                </div>
+                <button class="swap-btn" id="swap" title="Invertir">⇄</button>
+                <div class="field">
+                    <label>A</label>
+                    <select id="to"></select>
+                </div>
+            </div>
+
+            <div class="result">
+                <div class="value" id="result">--</div>
+                <div class="formula" id="formula"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const UNITS = {
+            length: {
+                name: 'Longitud',
+                units: [
+                    { id: 'mm', name: 'Milímetros', factor: 0.001 },
+                    { id: 'cm', name: 'Centímetros', factor: 0.01 },
+                    { id: 'm', name: 'Metros', factor: 1 },
+                    { id: 'km', name: 'Kilómetros', factor: 1000 },
+                    { id: 'in', name: 'Pulgadas', factor: 0.0254 },
+                    { id: 'ft', name: 'Pies', factor: 0.3048 },
+                    { id: 'mi', name: 'Millas', factor: 1609.344 }
+                ]
+            },
+            weight: {
+                name: 'Peso',
+                units: [
+                    { id: 'mg', name: 'Miligramos', factor: 0.000001 },
+                    { id: 'g', name: 'Gramos', factor: 0.001 },
+                    { id: 'kg', name: 'Kilogramos', factor: 1 },
+                    { id: 'oz', name: 'Onzas', factor: 0.0283495 },
+                    { id: 'lb', name: 'Libras', factor: 0.453592 }
+                ]
+            },
+            temperature: {
+                name: 'Temperatura',
+                units: [
+                    { id: 'c', name: 'Celsius (°C)', factor: null },
+                    { id: 'f', name: 'Fahrenheit (°F)', factor: null },
+                    { id: 'k', name: 'Kelvin (K)', factor: null }
+                ]
+            },
+            volume: {
+                name: 'Volumen',
+                units: [
+                    { id: 'ml', name: 'Mililitros', factor: 0.001 },
+                    { id: 'l', name: 'Litros', factor: 1 },
+                    { id: 'gal', name: 'Galones (US)', factor: 3.78541 },
+                    { id: 'cup', name: 'Tazas', factor: 0.236588 }
+                ]
+            }
+        };
+
+        const categoryEl = document.getElementById('category');
+        const fromEl = document.getElementById('from');
+        const toEl = document.getElementById('to');
+        const amountEl = document.getElementById('amount');
+        const resultEl = document.getElementById('result');
+        const formulaEl = document.getElementById('formula');
+        const swapBtn = document.getElementById('swap');
+        const themeToggle = document.getElementById('themeToggle');
+
+        function populateUnits() {
+            const cat = UNITS[categoryEl.value];
+            fromEl.innerHTML = '';
+            toEl.innerHTML = '';
+            cat.units.forEach(u => {
+                fromEl.innerHTML += `<option value="${u.id}">${u.name}</option>`;
+                toEl.innerHTML += `<option value="${u.id}">${u.name}</option>`;
+            });
+            toEl.selectedIndex = Math.min(1, cat.units.length - 1);
+            convert();
+        }
+
+        function tempConvert(value, from, to) {
+            let celsius;
+            if (from === 'c') celsius = value;
+            else if (from === 'f') celsius = (value - 32) * 5 / 9;
+            else celsius = value - 273.15;
+            if (to === 'c') return celsius;
+            if (to === 'f') return celsius * 9 / 5 + 32;
+            return celsius + 273.15;
+        }
+
+        function convert() {
+            const cat = UNITS[categoryEl.value];
+            const amount = parseFloat(amountEl.value) || 0;
+            const from = fromEl.value;
+            const to = toEl.value;
+            if (from === to) {
+                resultEl.textContent = amount.toLocaleString();
+                formulaEl.textContent = '';
+                return;
+            }
+            let res;
+            if (categoryEl.value === 'temperature') {
+                res = tempConvert(amount, from, to);
+            } else {
+                const fromU = cat.units.find(u => u.id === from);
+                const toU = cat.units.find(u => u.id === to);
+                res = amount * fromU.factor / toU.factor;
+            }
+            resultEl.textContent = res % 1 === 0 ? res.toLocaleString() : res.toFixed(6).replace(/0+$/, '').replace(/\.$/, '');
+            const fu = cat.units.find(u => u.id === from);
+            const tu = cat.units.find(u => u.id === to);
+            formulaEl.textContent = `1 ${fu.name} = ${(res / amount).toFixed(4)} ${tu.name}`;
+        }
+
+        categoryEl.addEventListener('change', populateUnits);
+        fromEl.addEventListener('change', convert);
+        toEl.addEventListener('change', convert);
+        amountEl.addEventListener('input', convert);
+        swapBtn.addEventListener('click', () => {
+            const tmp = fromEl.value;
+            fromEl.value = toEl.value;
+            toEl.value = tmp;
+            convert();
+        });
+
+        themeToggle.addEventListener('click', () => {
+            const c = document.documentElement.getAttribute('data-theme');
+            const n = c === 'light' ? 'dark' : 'light';
+            if (n === 'light') document.documentElement.setAttribute('data-theme', 'light');
+            else document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', n);
+        });
+
+        if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
+
+        populateUnits();
+    </script>
+</body>
+</html>

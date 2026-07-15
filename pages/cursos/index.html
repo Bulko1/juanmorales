@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; frame-src https://www.youtube.com;">
+    <title>Cursos Interactivos</title>
+    <style>
+        :root {
+            --bg: #111827;
+            --card: #1f2937;
+            --text: #d1d5db;
+            --title: #ffffff;
+            --accent: #38bdf8;
+            --border: rgba(255,255,255,0.1);
+            --input-bg: #374151;
+            --tag-bg: rgba(56,189,248,0.1);
+        }
+        html[data-theme='light'] {
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --text: #4b5563;
+            --title: #111827;
+            --border: #e5e7eb;
+            --input-bg: #f9fafb;
+            --tag-bg: rgba(56,189,248,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+        .top-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+        }
+        .top-nav .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            transition: background 0.2s;
+        }
+        .top-nav .back-link:hover { background: var(--input-bg); }
+        .top-nav .nav-title { flex: 1; text-align: center; font-weight: 600; color: var(--title); font-size: 0.9rem; }
+        .top-nav .theme-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .main-content { padding-top: 4rem; max-width: 720px; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; }
+        h1 { text-align: center; color: var(--title); margin: 2rem 0 0.5rem; font-size: 1.5rem; }
+        .subtitle { text-align: center; color: var(--text); margin-bottom: 2rem; font-size: 0.9rem; }
+        .courses-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .courses-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .course-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            display: block;
+        }
+        .course-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(56,189,248,0.1);
+        }
+        .course-card .icon { font-size: 2rem; margin-bottom: 0.75rem; }
+        .course-card h3 { color: var(--title); font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .course-card p { color: var(--text); font-size: 0.85rem; line-height: 1.5; }
+        .course-card .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+        .course-card .tag {
+            background: var(--tag-bg);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(56,189,248,0.2);
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="../../" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Portafolio
+        </a>
+        <span class="nav-title">Cursos Interactivos</span>
+        <button class="theme-btn" id="themeToggle" title="Cambiar tema">🌓</button>
+    </nav>
+
+    <div class="main-content">
+        <h1>Cursos Interactivos</h1>
+        <p class="subtitle">Aprende con contenido interactivo, quizzes y certificados</p>
+
+        <div class="courses-grid">
+            <a href="../../RL.html" class="course-card">
+                <div class="icon">⚡</div>
+                <h3>Rapid Learning (CSS Puro)</h3>
+                <p>Curso de una página con 5 diapositivas, video, quiz interactivo y certificado descargable. Selector de tema claro/oscuro.</p>
+                <div class="tags">
+                    <span class="tag">CSS Puro</span>
+                    <span class="tag">Canvas API</span>
+                    <span class="tag">Certificado</span>
+                </div>
+            </a>
+
+            <a href="rapid-learning.html" class="course-card">
+                <div class="icon">🎓</div>
+                <h3>Rapid Learning (Bootstrap)</h3>
+                <p>Versión con Bootstrap 5 del curso Rapid Learning. Mismo contenido con diseño responsive y componentes de Bootstrap.</p>
+                <div class="tags">
+                    <span class="tag">Bootstrap 5</span>
+                    <span class="tag">Quiz</span>
+                    <span class="tag">Certificado</span>
+                </div>
+            </a>
+
+            <a href="seguridad.html" class="course-card">
+                <div class="icon">🏠</div>
+                <h3>Seguridad en Hogar y Oficina</h3>
+                <p>Curso extensivo con 3 módulos, navegación lateral, seguimiento de progreso y lecciones interactivas. Diseño propio.</p>
+                <div class="tags">
+                    <span class="tag">CSS Puro</span>
+                    <span class="tag">3 Módulos</span>
+                    <span class="tag">Progreso</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            const c = document.documentElement.getAttribute('data-theme');
+            const n = c === 'light' ? 'dark' : 'light';
+            if (n === 'light') document.documentElement.setAttribute('data-theme', 'light');
+            else document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', n);
+        });
+        if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+/* General styles */
+:root {
+    --card-border: 2px solid #0d6efd;
+    --card-radius: 14px;
+    --card-gap: 2rem;
+}
+body.dark-mode {
+    background-color: #0b1020;
+    color: #e6eef8;
+}
+.dark-mode .card {
+    background-color: #111318;
+    color: #e6eef8;
+    border: 1px solid #263044;
+}
+.card {
+    border-radius: var(--card-radius);
+    border: var(--card-border);
+    box-shadow: 0 10px 20px rgba(2, 6, 23, 0.45);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    margin-bottom: var(--card-gap);
+    display: flex;
+    flex-direction: column;
+    min-height: 120px;
+}
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 30px rgba(2, 6, 23, 0.55);
+}
+.card-body {
+    padding: 1.25rem 1.5rem;
+}
+.card-title {
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin-bottom: 0.75rem;
+}
+.card-text {
+    font-size: 0.98rem;
+    padding-left: 1.25rem;
+    margin: 0;
+    white-space: normal;
+}
+/* Theme toggle fixed top-right */
+#theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1100;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: inherit;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+}
+#theme-toggle:hover {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+#theme-icon {
+    font-size: 1.05rem;
+}
+
+#Home-icon {
+    font-size: 1.05rem;
+}
+/* Increase gaps between grid cells */
+.g-custom {
+    gap: 2rem 1.5rem; /* row-gap column-gap */
+}
+/* Responsive: force 1 column on xs, 2 columns on sm+ */
+@media (min-width: 576px) {
+    .cards-cols {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

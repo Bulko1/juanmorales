@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <title>Contador de Palabras</title>
+    <style>
+        :root {
+            --bg: #111827;
+            --card: #1f2937;
+            --text: #d1d5db;
+            --title: #ffffff;
+            --accent: #38bdf8;
+            --border: rgba(255,255,255,0.1);
+            --input-bg: #374151;
+        }
+        html[data-theme='light'] {
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --text: #4b5563;
+            --title: #111827;
+            --border: #e5e7eb;
+            --input-bg: #f9fafb;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+        .top-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+        }
+        .top-nav .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            transition: background 0.2s;
+        }
+        .top-nav .back-link:hover { background: var(--input-bg); }
+        .top-nav .nav-title { flex: 1; text-align: center; font-weight: 600; color: var(--title); font-size: 0.9rem; }
+        .top-nav .theme-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .main-content { padding-top: 4rem; max-width: 720px; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; }
+        h1 { text-align: center; color: var(--title); margin: 2rem 0 1.5rem; font-size: 1.5rem; }
+        textarea {
+            width: 100%; height: 220px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            color: var(--text);
+            font-size: 1rem;
+            font-family: system-ui, sans-serif;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        textarea:focus { outline: none; border-color: var(--accent); }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+        }
+        .stat-card .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .stat-card .stat-label {
+            font-size: 0.8rem;
+            color: var(--text);
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="../../" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Portafolio
+        </a>
+        <span class="nav-title">Contador de Palabras</span>
+        <button class="theme-btn" id="themeToggle" title="Cambiar tema">🌓</button>
+    </nav>
+
+    <div class="main-content">
+        <h1>Contador de Palabras y Caracteres</h1>
+
+        <textarea id="input" placeholder="Escribe o pega tu texto aquí..."></textarea>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="words">0</div>
+                <div class="stat-label">Palabras</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="chars">0</div>
+                <div class="stat-label">Caracteres</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="charsNoSpace">0</div>
+                <div class="stat-label">Caracteres (sin espacios)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="sentences">0</div>
+                <div class="stat-label">Frases</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="paragraphs">0</div>
+                <div class="stat-label">Párrafos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="readTime">0 min</div>
+                <div class="stat-label">Tiempo de lectura</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('input');
+        const wordsEl = document.getElementById('words');
+        const charsEl = document.getElementById('chars');
+        const charsNoSpaceEl = document.getElementById('charsNoSpace');
+        const sentencesEl = document.getElementById('sentences');
+        const paragraphsEl = document.getElementById('paragraphs');
+        const readTimeEl = document.getElementById('readTime');
+        const themeToggle = document.getElementById('themeToggle');
+
+        function update() {
+            const text = input.value;
+            charsEl.textContent = text.length;
+            charsNoSpaceEl.textContent = text.replace(/\s/g, '').length;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            wordsEl.textContent = words;
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
+            sentencesEl.textContent = sentences;
+            const paragraphs = text.trim() ? text.split(/\n\s*\n/).filter(p => p.trim()).length : 0;
+            if (!text.trim()) paragraphsEl.textContent = '0';
+            else paragraphsEl.textContent = paragraphs || 1;
+            const min = Math.ceil(words / 200);
+            readTimeEl.textContent = min + ' min';
+        }
+
+        input.addEventListener('input', update);
+
+        themeToggle.addEventListener('click', () => {
+            const c = document.documentElement.getAttribute('data-theme');
+            const n = c === 'light' ? 'dark' : 'light';
+            if (n === 'light') document.documentElement.setAttribute('data-theme', 'light');
+            else document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', n);
+        });
+
+        if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <title>Generador de Contraseñas</title>
+    <style>
+        :root {
+            --bg: #111827;
+            --card: #1f2937;
+            --text: #d1d5db;
+            --title: #ffffff;
+            --accent: #38bdf8;
+            --border: rgba(255,255,255,0.1);
+            --input-bg: #374151;
+            --tag-bg: rgba(56,189,248,0.1);
+        }
+        html[data-theme='light'] {
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --text: #4b5563;
+            --title: #111827;
+            --border: #e5e7eb;
+            --input-bg: #f9fafb;
+            --tag-bg: rgba(56,189,248,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+        .top-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+        }
+        .top-nav .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            transition: background 0.2s;
+        }
+        .top-nav .back-link:hover { background: var(--input-bg); }
+        .top-nav .nav-title { flex: 1; text-align: center; font-weight: 600; color: var(--title); font-size: 0.9rem; }
+        .top-nav .theme-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .main-content { padding-top: 4rem; max-width: 520px; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; }
+        h1 { text-align: center; color: var(--title); margin: 2rem 0 1.5rem; font-size: 1.5rem; }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .field { margin-bottom: 1.25rem; }
+        .field label { display: flex; justify-content: space-between; align-items: center; color: var(--title); font-weight: 500; margin-bottom: 0.5rem; }
+        .field label span { color: var(--accent); font-weight: 700; }
+        input[type="range"] { width: 100%; accent-color: var(--accent); }
+        .checks { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+        .checks label {
+            display: flex; align-items: center; gap: 0.4rem;
+            background: var(--tag-bg); color: var(--accent);
+            font-size: 0.85rem; font-weight: 500;
+            padding: 0.35rem 0.75rem; border-radius: 9999px;
+            cursor: pointer; border: 1px solid rgba(56,189,248,0.2);
+            transition: background 0.2s;
+        }
+        .checks label:hover { background: rgba(56,189,248,0.2); }
+        .checks input { accent-color: var(--accent); }
+        .output {
+            display: flex; gap: 0.5rem; margin: 1.25rem 0;
+        }
+        .output input {
+            flex: 1;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: var(--title);
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: #0ea5e9; color: white; }
+        .btn-primary:hover { background: #0284c7; }
+        .btn-secondary { background: var(--input-bg); color: var(--accent); border: 1px solid var(--accent); }
+        .btn-secondary:hover { background: var(--accent); color: white; }
+        .btn-copy { background: #059669; color: white; white-space: nowrap; }
+        .btn-copy:hover { background: #047857; }
+        .btn-copy.copied { background: #10b981; }
+        .strength-bar {
+            height: 6px; border-radius: 3px;
+            background: var(--input-bg);
+            margin-top: 0.5rem; overflow: hidden;
+        }
+        .strength-fill {
+            height: 100%; border-radius: 3px;
+            transition: width 0.3s, background 0.3s;
+        }
+        .strength-label { font-size: 0.8rem; margin-top: 0.25rem; text-align: right; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="../../" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Portafolio
+        </a>
+        <span class="nav-title">Generador de Contraseñas</span>
+        <button class="theme-btn" id="themeToggle" title="Cambiar tema">🌓</button>
+    </nav>
+
+    <div class="main-content">
+        <h1>Generador de Contraseñas Seguras</h1>
+
+        <div class="card">
+            <div class="output">
+                <input type="text" id="password" readonly placeholder="Tu contraseña aparecerá aquí">
+                <button class="btn btn-copy" id="copyBtn">Copiar</button>
+            </div>
+            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+            <div class="strength-label" id="strengthLabel"></div>
+            <button class="btn btn-primary" id="generateBtn" style="width:100%; margin-top:1rem;">Generar Contraseña</button>
+        </div>
+
+        <div class="card">
+            <div class="field">
+                <label>Longitud: <span id="lengthVal">16</span></label>
+                <input type="range" id="length" min="8" max="64" value="16">
+            </div>
+            <div class="field">
+                <label>Incluir:</label>
+                <div class="checks">
+                    <label><input type="checkbox" id="upper" checked> Mayúsculas</label>
+                    <label><input type="checkbox" id="lower" checked> Minúsculas</label>
+                    <label><input type="checkbox" id="numbers" checked> Números</label>
+                    <label><input type="checkbox" id="symbols" checked> Símbolos</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const lengthSlider = document.getElementById('length');
+        const lengthVal = document.getElementById('lengthVal');
+        const upperEl = document.getElementById('upper');
+        const lowerEl = document.getElementById('lower');
+        const numbersEl = document.getElementById('numbers');
+        const symbolsEl = document.getElementById('symbols');
+        const passwordEl = document.getElementById('password');
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthLabel = document.getElementById('strengthLabel');
+        const themeToggle = document.getElementById('themeToggle');
+
+        const CHARS = {
+            upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            lower: 'abcdefghijklmnopqrstuvwxyz',
+            numbers: '0123456789',
+            symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+        };
+
+        lengthSlider.addEventListener('input', () => lengthVal.textContent = lengthSlider.value);
+
+        function getStrength(length, charPoolSize) {
+            const entropy = length * Math.log2(charPoolSize);
+            if (entropy < 40) return { w: '25%', color: '#ef4444', label: 'Débil' };
+            if (entropy < 60) return { w: '50%', color: '#f59e0b', label: 'Regular' };
+            if (entropy < 80) return { w: '75%', color: '#38bdf8', label: 'Buena' };
+            return { w: '100%', color: '#10b981', label: 'Muy fuerte' };
+        }
+
+        function generate() {
+            let pool = '';
+            if (upperEl.checked) pool += CHARS.upper;
+            if (lowerEl.checked) pool += CHARS.lower;
+            if (numbersEl.checked) pool += CHARS.numbers;
+            if (symbolsEl.checked) pool += CHARS.symbols;
+            if (!pool) {
+                passwordEl.value = '';
+                strengthFill.style.width = '0%';
+                strengthLabel.textContent = '';
+                return;
+            }
+            const length = parseInt(lengthSlider.value);
+            const arr = new Uint32Array(length);
+            crypto.getRandomValues(arr);
+            let pwd = '';
+            for (let i = 0; i < length; i++) pwd += pool[arr[i] % pool.length];
+            passwordEl.value = pwd;
+            const s = getStrength(length, pool.length);
+            strengthFill.style.width = s.w;
+            strengthFill.style.background = s.color;
+            strengthLabel.textContent = s.label;
+            strengthLabel.style.color = s.color;
+        }
+
+        async function copy() {
+            if (!passwordEl.value) return;
+            await navigator.clipboard.writeText(passwordEl.value);
+            copyBtn.textContent = 'Copiado!';
+            copyBtn.classList.add('copied');
+            setTimeout(() => { copyBtn.textContent = 'Copiar'; copyBtn.classList.remove('copied'); }, 2000);
+        }
+
+        generateBtn.addEventListener('click', generate);
+        copyBtn.addEventListener('click', copy);
+        [upperEl, lowerEl, numbersEl, symbolsEl].forEach(el => el.addEventListener('change', generate));
+        lengthSlider.addEventListener('input', generate);
+
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            if (next === 'light') document.documentElement.setAttribute('data-theme', 'light');
+            else document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', next);
+        });
+
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+
+        generate();
+    </script>
+</body>
+</html>

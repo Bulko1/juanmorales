@@ -10,7 +10,7 @@ async function fetchData(url = API_URL) {
 
 async function updateIndicators() {
     try {
-        const data = await fetchData('https://mindicador.cl/api');
+        const data = await fetchData(API_URL);
         renderIndicators(data);
     } catch (error) {
         handleFetchError(error);
@@ -19,26 +19,50 @@ async function updateIndicators() {
 
 function renderIndicators(data) {
     const container = document.getElementById('cards-container');
-    container.innerHTML = ''; // Limpiar contenido existente
+    container.innerHTML = '';
     Object.keys(data).forEach(key => {
         if (typeof data[key] === 'object' && data[key].nombre) {
             const indicator = data[key];
             const formattedDate = formatDate(indicator.fecha);
             const card = document.createElement('div');
             card.className = 'col';
-            card.innerHTML = `
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">${indicator.nombre}</h5>
-                        <p class="card-text">
-                            <strong>Código:</strong> ${key}<br>
-                            <strong>Unidad Medida:</strong> ${indicator.unidad_medida}<br>
-                            <strong>Fecha:</strong> ${formattedDate}<br>
-                            <strong>Valor:</strong> ${indicator.valor}
-                        </p>
-                    </div>
-                </div>
-            `;
+            const cardInner = document.createElement('div');
+            cardInner.className = 'card h-100';
+            const cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+            const title = document.createElement('h5');
+            title.className = 'card-title';
+            title.textContent = indicator.nombre;
+            const text = document.createElement('p');
+            text.className = 'card-text';
+
+            const strongCodigo = document.createElement('strong');
+            strongCodigo.textContent = 'Código: ';
+            text.appendChild(strongCodigo);
+            text.appendChild(document.createTextNode(key));
+            text.appendChild(document.createElement('br'));
+
+            const strongUnidad = document.createElement('strong');
+            strongUnidad.textContent = 'Unidad Medida: ';
+            text.appendChild(strongUnidad);
+            text.appendChild(document.createTextNode(indicator.unidad_medida));
+            text.appendChild(document.createElement('br'));
+
+            const strongFecha = document.createElement('strong');
+            strongFecha.textContent = 'Fecha: ';
+            text.appendChild(strongFecha);
+            text.appendChild(document.createTextNode(formattedDate));
+            text.appendChild(document.createElement('br'));
+
+            const strongValor = document.createElement('strong');
+            strongValor.textContent = 'Valor: ';
+            text.appendChild(strongValor);
+            text.appendChild(document.createTextNode(indicator.valor));
+
+            cardBody.appendChild(title);
+            cardBody.appendChild(text);
+            cardInner.appendChild(cardBody);
+            card.appendChild(cardInner);
             container.appendChild(card);
         }
     });
@@ -47,12 +71,13 @@ function renderIndicators(data) {
 function handleFetchError(error) {
     console.error('Error fetching data:', error);
     const container = document.getElementById('cards-container');
-    const errorMessage = `No se pudieron cargar los datos. Por favor, verifica tu conexión a internet o intenta nuevamente más tarde.`;
-    container.innerHTML = `
-        <div class="alert alert-danger" role="alert" aria-live="assertive">
-            ${errorMessage}
-        </div>
-    `;
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger';
+    alertDiv.setAttribute('role', 'alert');
+    alertDiv.setAttribute('aria-live', 'assertive');
+    alertDiv.textContent = 'No se pudieron cargar los datos. Por favor, verifica tu conexión a internet o intenta nuevamente más tarde.';
+    container.innerHTML = '';
+    container.appendChild(alertDiv);
 }
 
 function formatDate(dateString) {

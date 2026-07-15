@@ -1,0 +1,868 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <title>Curso de Seguridad en el Hogar y Oficina</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            margin-top: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4CAF50;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 600px;
+        }
+
+        .sidebar {
+            width: 25%;
+            background: #f8f9fa;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #ddd;
+        }
+
+        .content-area {
+            width: 75%;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .module {
+            margin-bottom: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .module-header {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .module-header:hover {
+            background: #5568d3;
+        }
+
+        .module-header.active {
+            background: #764ba2;
+        }
+
+        .module-lessons {
+            display: none;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+        }
+
+        .module-lessons.show {
+            display: block;
+        }
+
+        .lesson {
+            padding: 12px 20px;
+            border-left: 4px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            margin: 5px;
+            border-radius: 3px;
+        }
+
+        .lesson:hover {
+            background: #f0f0f0;
+            border-left-color: #667eea;
+        }
+
+        .lesson.active {
+            background: #e3f2fd;
+            border-left-color: #667eea;
+            font-weight: bold;
+        }
+
+        .lesson.completed {
+            border-left-color: #4CAF50;
+        }
+
+        .lesson.completed::before {
+            content: "✓ ";
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .lesson-title {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .lesson-content {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+        }
+
+        .topic-list {
+            background: #f9f9f9;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .topic-list h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .topic-list ul {
+            margin-left: 20px;
+        }
+
+        .topic-list li {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .quiz-section {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        .quiz-question {
+            margin: 15px 0;
+        }
+
+        .quiz-question label {
+            display: block;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .quiz-question input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #4CAF50;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+        }
+
+        .checklist {
+            margin: 20px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f9f9f9;
+            margin: 8px 0;
+            border-radius: 5px;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .certification {
+            background: linear-gradient(135deg, #ffd89b 0%, #ff9c5f 100%);
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.3);
+        }
+
+        .certification h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .content-area {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 0.75rem 1.5rem; display: flex; align-items: center; position: sticky; top: 0; z-index: 100;">
+        <a href="../../" style="display: inline-flex; align-items: center; gap: 0.5rem; color: white; font-weight: 600; font-size: 0.9rem; text-decoration: none; background: rgba(255,255,255,0.15); padding: 0.4rem 0.8rem; border-radius: 0.375rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Portafolio
+        </a>
+        <span style="flex: 1; text-align: center; color: white; font-weight: 600; font-size: 0.9rem;">Curso de Seguridad</span>
+        <span style="width: 80px;"></span>
+    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Curso de Seguridad en el Hogar y Oficina</h1>
+            <p>Aprende a crear ambientes seguros</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Sidebar Navigation -->
+            <div class="sidebar" id="sidebar">
+                <h3 style="margin-bottom: 20px; color: #333;">Módulos</h3>
+                <div id="modulesList"></div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="content-area">
+                <div id="contentContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const courseData = {
+            modules: [
+                {
+                    id: 'module1',
+                    title: '🏠 Seguridad en el Hogar',
+                    duration: '5 horas',
+                    lessons: [
+                        {
+                            id: 'lesson1-1',
+                            title: 'Identificación de Hazards en el Hogar',
+                            duration: '1.5 horas',
+                            content: `
+                                <p>El hogar es nuestro lugar más importante, pero también contiene varios riesgos que debemos conocer y controlar.</p>
+
+                                <div class="topic-list">
+                                    <h3>Principales Hazards en el Hogar:</h3>
+                                    <ul>
+                                        <li><strong>Caídas:</strong> La principal causa de lesiones en el hogar, especialmente en escaleras</li>
+                                        <li><strong>Incendios:</strong> Riesgos de fuego en cocinas, calefactores y cables eléctricos</li>
+                                        <li><strong>Intoxicaciones Químicas:</strong> Productos de limpieza, pesticidas y medicamentos</li>
+                                        <li><strong>Riesgos Eléctricos:</strong> Cables dañados, enchufes sobrecargados y cortocircuitos</li>
+                                        <li><strong>Ahogamiento:</strong> En piscinas, bañeras y otras masas de agua</li>
+                                        <li><strong>Sofocación:</strong> Especialmente en niños pequeños</li>
+                                    </ul>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <strong>Dato importante:</strong> Las caídas representan aproximadamente 36% de todas las lesiones fatales en el hogar.
+                                </div>
+
+                                <div class="quiz-section">
+                                    <h3>Verificación de Conocimiento</h3>
+                                    <div class="quiz-question">
+                                        <p><strong>¿Cuál es el principal riesgo en escaleras?</strong></p>
+                                        <label><input type="radio" name="q1" value="a"> Las corrientes de aire</label>
+                                        <label><input type="radio" name="q1" value="b"> La falta de iluminación y superficies resbaladizas</label>
+                                        <label><input type="radio" name="q1" value="c"> El ruido</label>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            id: 'lesson1-2',
+                            title: 'Prevención de Caídas',
+                            duration: '1.5 horas',
+                            content: `
+                                <p>Las caídas son prevenibles. Implementar medidas simples puede reducir significativamente el riesgo.</p>
+
+                                <div class="topic-list">
+                                    <h3>Medidas de Prevención:</h3>
+                                    <ul>
+                                        <li><strong>Iluminación adecuada:</strong> Instala luces brillantes en escaleras, pasillos y baños</li>
+                                        <li><strong>Orden y limpieza:</strong> Mantén los espacios libres de objetos que causen tropiezos</li>
+                                        <li><strong>Escaleras seguras:</strong> Asegúrate de que tengan barandillas firmes en ambos lados</li>
+                                        <li><strong>Superficies antideslizantes:</strong> Usa alfombrillas en baños y cocinas</li>
+                                        <li><strong>Equipos de asistencia:</strong> Barras de agarre en baños para personas mayores</li>
+                                        <li><strong>Calzado apropiado:</strong> Evita zapatos sueltos o resbaladizos</li>
+                                    </ul>
+                                </div>
+
+                                <h3>Lista de Verificación de tu Hogar:</h3>
+                                <div class="checklist">
+                                    <div class="checklist-item">
+                                        <input type="checkbox" id="check1">
+                                        <label for="check1">Todas las escaleras tienen barandillas</label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <input type="checkbox" id="check2">
+                                        <label for="check2">La iluminación es adecuada en escaleras y pasillos</label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <input type="checkbox" id="check3">
+                                        <label for="check3">No hay cables ni objetos en el suelo</label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <input type="checkbox" id="check4">
+                                        <label for="check4">Tengo alfombrillas en baños</label>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            id: 'lesson1-3',
+                            title: 'Seguridad Contra Incendios',
+                            duration: '1 hora',
+                            content: `
+                                <p>Los incendios pueden ocurrir rápidamente. La detección temprana y la prevención son clave.</p>
+
+                                <div class="topic-list">
+                                    <h3>Medidas de Prevención de Incendios:</h3>
+                                    <ul>
+                                        <li><strong>Detectores de humo:</strong> Instala en cada nivel, especialmente cerca de dormitorios</li>
+                                        <li><strong>Extintores:</strong> Mantén al menos uno en la cocina</li>
+                                        <li><strong>Planes de evacuación:</strong> Crea una ruta clara desde tu hogar</li>
+                                        <li><strong>Punto de reunión:</strong> Designa un lugar seguro fuera de la casa</li>
+                                        <li><strong>Práctica regular:</strong> Realiza simulacros con tu familia</li>
+                                    </ul>
+                                </div>
+
+                                <div class="alert alert-success">
+                                    <strong>Consejo:</strong> Cambia las pilas de tus detectores de humo dos veces al año.
+                                </div>
+                            `
+                        },
+                        {
+                            id: 'lesson1-4',
+                            title: 'Seguridad Química y Eléctrica',
+                            duration: '1 hora',
+                            content: `
+                                <p>Los productos químicos y los riesgos eléctricos requieren manejo especial.</p>
+
+                                <div class="topic-list">
+                                    <h3>Almacenamiento Seguro de Químicos:</h3>
+                                    <ul>
+                                        <li>Guarda en recipientes originales con etiquetas claras</li>
+                                        <li>Mantén fuera del alcance de niños y mascotas</li>
+                                        <li>Nunca mezcles productos químicos (especialmente cloro con amoníaco)</li>
+                                        <li>Ventila adecuadamente al usar</li>
+                                    </ul>
+                                </div>
+
+                                <div class="topic-list">
+                                    <h3>Seguridad Eléctrica:</h3>
+                                    <ul>
+                                        <li>No sobrecargues enchufes o cables de extensión</li>
+                                        <li>Reemplaza cables dañados inmediatamente</li>
+                                        <li>Usa protectores de enchufes si hay niños</li>
+                                        <li>No uses electricidad cerca de agua</li>
+                                    </ul>
+                                </div>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: 'module2',
+                    title: '🏢 Seguridad en la Oficina',
+                    duration: '5 horas',
+                    lessons: [
+                        {
+                            id: 'lesson2-1',
+                            title: 'Ergonomía en el Lugar de Trabajo',
+                            duration: '1.5 horas',
+                            content: `
+                                <p>Una configuración ergonómica correcta previene lesiones musculoesqueléticas a largo plazo.</p>
+
+                                <div class="topic-list">
+                                    <h3>Configuración Ergonómica Correcta:</h3>
+                                    <ul>
+                                        <li><strong>Monitor:</strong> A la altura de los ojos, a 50-70 cm de distancia</li>
+                                        <li><strong>Teclado y ratón:</strong> A la altura de los codos, con muñecas neutras</li>
+                                        <li><strong>Silla:</strong> Con soporte lumbar, brazos ajustables y altura regulable</li>
+                                        <li><strong>Escritorio:</strong> Altura entre 70-75 cm</li>
+                                        <li><strong>Pies:</strong> Apoyados en el suelo o reposapiés</li>
+                                    </ul>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <strong>Dato importante:</strong> Los trastornos musculoesqueléticos representan el 37% de todas las lesiones laborales graves.
+                                </div>
+                            `
+                        },
+                        {
+                            id: 'lesson2-2',
+                            title: 'Control de Acceso y Protección de Datos',
+                            duration: '1.5 horas',
+                            content: `
+                                <p>La seguridad cibernética y física son igualmente importantes en la oficina.</p>
+
+                                <div class="topic-list">
+                                    <h3>Gestión de Contraseñas Seguras:</h3>
+                                    <ul>
+                                        <li>Usa contraseñas fuertes (mínimo 12 caracteres)</li>
+                                        <li>Incluye mayúsculas, números y símbolos</li>
+                                        <li>Cambia regularmente tus contraseñas</li>
+                                        <li>No compartas contraseñas con nadie</li>
+                                        <li>Usa gestores de contraseñas</li>
+                                        <li>Activa la autenticación de dos factores</li>
+                                    </ul>
+                                </div>
+
+                                <div class="topic-list">
+                                    <h3>Seguridad Física de la Oficina:</h3>
+                                    <ul>
+                                        <li>Sistema de control de acceso</li>
+                                        <li>Sistema de visitantes</li>
+                                        <li>Cámaras de vigilancia</li>
+                                        <li>Procedimientos de cierre seguro</li>
+                                    </ul>
+                                </div>
+                            `
+                        },
+                        {
+                            id: 'lesson2-3',
+                            title: 'Seguridad Contra Incendios en Oficinas',
+                            duration: '1 hora',
+                            content: `
+                                <p>La preparación para incendios en espacios de trabajo ocupados es crítica.</p>
+
+                                <div class="topic-list">
+                                    <h3>Plan de Evacuación de la Oficina:</h3>
+                                    <ul>
+                                        <li>Rutas de evacuación claras y marcadas</li>
+                                        <li>Punto de reunión designado fuera del edificio</li>
+                                        <li>Responsables de área para verificar la evacuación</li>
+                                        <li>Procedimientos para personas con discapacidad</li>
+                                        <li>Simulacros periódicos</li>
+                                    </ul>
+                                </div>
+                            `
+                        },
+                        {
+                            id: 'lesson2-4',
+                            title: 'Protección del Espacio de Trabajo',
+                            duration: '1 hora',
+                            content: `
+                                <p>Mantener un espacio de trabajo limpio y seguro beneficia a todos.</p>
+
+                                <div class="topic-list">
+                                    <h3>Requisitos de Seguridad en el Espacio de Trabajo:</h3>
+                                    <ul>
+                                        <li><strong>Iluminación:</strong> Mínimo 300-500 lux</li>
+                                        <li><strong>Temperatura:</strong> 19-23°C</li>
+                                        <li><strong>Humedad:</strong> 30-70%</li>
+                                        <li><strong>Ventilación:</strong> Aire limpio y circulante</li>
+                                        <li><strong>Ruido:</strong> Menor a 70 dB</li>
+                                        <li><strong>Orden:</strong> Libre de obstáculos</li>
+                                    </ul>
+                                </div>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: 'module3',
+                    title: '🚨 Preparación para Emergencias',
+                    duration: '4 horas',
+                    lessons: [
+                        {
+                            id: 'lesson3-1',
+                            title: 'Planes de Emergencia y Evacuación',
+                            duration: '1.5 horas',
+                            content: `
+                                <p>Un plan bien preparado puede salvar vidas en situaciones de emergencia.</p>
+
+                                <div class="topic-list">
+                                    <h3>Componentes de un Plan de Emergencia:</h3>
+                                    <ul>
+                                        <li>Identificación de posibles riesgos</li>
+                                        <li>Rutas de escape primarias y secundarias</li>
+                                        <li>Puntos de reunión seguros</li>
+                                        <li>Roles y responsabilidades</li>
+                                        <li>Información de contacto de emergencia</li>
+                                        <li>Procedimientos para personas con necesidades especiales</li>
+                                    </ul>
+                                </div>
+                            `
+                        },
+                        {
+                            id: 'lesson3-2',
+                            title: 'Primeros Auxilios Básicos',
+                            duration: '1 hora',
+                            content: `
+                                <p>El conocimiento básico de primeros auxilios puede ser vital.</p>
+
+                                <div class="alert alert-info">
+                                    <strong>Nota:</strong> Este módulo es una introducción. Para entrenamiento completo en RCP, consulta a un profesional certificado.
+                                </div>
+
+                                <div class="topic-list">
+                                    <h3>Pasos Básicos en una Emergencia:</h3>
+                                    <ul>
+                                        <li>Garantiza tu propia seguridad primero</li>
+                                        <li>Llama a los servicios de emergencia (911 o local)</li>
+                                        <li>Mantén la calma a la persona afectada</li>
+                                        <li>Aplica presión en heridas sangrantes</li>
+                                        <li>Coloca a personas inconscientes en posición de recuperación</li>
+                                        <li>No moves a personas con lesiones de columna</li>
+                                    </ul>
+                                </div>
+                            `
+                        },
+                        {
+                            id: 'lesson3-3',
+                            title: 'Preparación para Desastres Naturales',
+                            duration: '1.5 horas',
+                            content: `
+                                <p>Prepárate para desastres naturales con anticipación.</p>
+
+                                <div class="topic-list">
+                                    <h3>Kit de Emergencia Esencial:</h3>
+                                    <ul>
+                                        <li>Agua (3-4 litros por persona)</li>
+                                        <li>Alimentos no perecederos</li>
+                                        <li>Botiquín de primeros auxilios</li>
+                                        <li>Linterna y pilas</li>
+                                        <li>Radio portátil</li>
+                                        <li>Documento de identidad y documentos importantes</li>
+                                        <li>Medicamentos esenciales</li>
+                                        <li>Dinero en efectivo</li>
+                                    </ul>
+                                </div>
+
+                                <div class="topic-list">
+                                    <h3>Contactos de Emergencia:</h3>
+                                    <ul>
+                                        <li>Números de servicios locales</li>
+                                        <li>Contactos familiares fuera del área</li>
+                                        <li>Información de seguros</li>
+                                        <li>Información médica importante</li>
+                                    </ul>
+                                </div>
+                            `
+                        }
+                    ]
+                }
+            ]
+        };
+
+        let currentModule = null;
+        let currentLesson = null;
+        let completedLessons = [];
+
+        function initializeCourse() {
+            renderModulesList();
+            if (courseData.modules.length > 0) {
+                selectModule(courseData.modules[0].id, courseData.modules[0].lessons[0].id);
+            }
+        }
+
+        function renderModulesList() {
+            const modulesList = document.getElementById('modulesList');
+            modulesList.innerHTML = '';
+
+            courseData.modules.forEach(module => {
+                const moduleDiv = document.createElement('div');
+                moduleDiv.className = 'module';
+
+                const header = document.createElement('div');
+                header.className = 'module-header';
+                header.innerHTML = `<span>${module.title}</span><span>›</span>`;
+                header.onclick = () => toggleModule(module.id);
+
+                const lessonsDiv = document.createElement('div');
+                lessonsDiv.className = 'module-lessons';
+                lessonsDiv.id = `lessons-${module.id}`;
+
+                module.lessons.forEach(lesson => {
+                    const lessonDiv = document.createElement('div');
+                    lessonDiv.className = 'lesson';
+                    lessonDiv.id = `lesson-${lesson.id}`;
+                    lessonDiv.textContent = lesson.title;
+                    lessonDiv.onclick = () => selectModule(module.id, lesson.id);
+                    lessonsDiv.appendChild(lessonDiv);
+                });
+
+                moduleDiv.appendChild(header);
+                moduleDiv.appendChild(lessonsDiv);
+                modulesList.appendChild(moduleDiv);
+            });
+        }
+
+        function toggleModule(moduleId) {
+            const lessonsDiv = document.getElementById(`lessons-${moduleId}`);
+            lessonsDiv.classList.toggle('show');
+
+            const header = this.closest('.module-header');
+            header.classList.toggle('active');
+        }
+
+        function selectModule(moduleId, lessonId) {
+            currentModule = moduleId;
+            currentLesson = lessonId;
+
+            // Update sidebar
+            document.querySelectorAll('.lesson').forEach(el => el.classList.remove('active'));
+            document.getElementById(`lesson-${lessonId}`).classList.add('active');
+
+            // Find and display lesson content
+            const module = courseData.modules.find(m => m.id === moduleId);
+            const lesson = module.lessons.find(l => l.id === lessonId);
+
+            renderContent(module, lesson);
+        }
+
+        function renderContent(module, lesson) {
+            const contentContainer = document.getElementById('contentContainer');
+            contentContainer.innerHTML = '';
+
+            const title = document.createElement('h2');
+            title.className = 'lesson-title';
+            title.textContent = lesson.title;
+            contentContainer.appendChild(title);
+
+            const meta = document.createElement('p');
+            meta.style.cssText = 'color: #666; font-size: 0.9em;';
+            meta.textContent = `Módulo: ${module.title} | Duración: ${lesson.duration}`;
+            contentContainer.appendChild(meta);
+
+            const lessonContent = document.createElement('div');
+            lessonContent.className = 'lesson-content';
+            lessonContent.innerHTML = lesson.content;
+            contentContainer.appendChild(lessonContent);
+
+            const nav = document.createElement('div');
+            nav.className = 'navigation';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'btn btn-secondary';
+            prevBtn.textContent = '← Anterior';
+            prevBtn.onclick = previousLesson;
+            nav.appendChild(prevBtn);
+
+            const completeBtn = document.createElement('button');
+            completeBtn.className = 'btn btn-success';
+            completeBtn.textContent = '✓ Marcar como Completado';
+            completeBtn.onclick = markAsComplete;
+            nav.appendChild(completeBtn);
+
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'btn';
+            nextBtn.textContent = 'Siguiente →';
+            nextBtn.onclick = nextLesson;
+            nav.appendChild(nextBtn);
+
+            contentContainer.appendChild(nav);
+
+            updateProgress();
+        }
+
+        function markAsComplete() {
+            if (!completedLessons.includes(currentLesson)) {
+                completedLessons.push(currentLesson);
+                document.getElementById(`lesson-${currentLesson}`).classList.add('completed');
+                alert('¡Lección marcada como completada!');
+                updateProgress();
+            } else {
+                alert('Ya has completado esta lección.');
+            }
+        }
+
+        function nextLesson() {
+            const lessons = courseData.modules.flatMap(m => m.lessons.map(l => ({ ...l, moduleId: m.id })));
+            const currentIndex = lessons.findIndex(l => l.id === currentLesson);
+
+            if (currentIndex < lessons.length - 1) {
+                const nextLess = lessons[currentIndex + 1];
+                selectModule(nextLess.moduleId, nextLess.id);
+            } else {
+                alert('¡Has completado todas las lecciones! Accede al examen final desde el módulo de consolidación.');
+            }
+        }
+
+        function previousLesson() {
+            const lessons = courseData.modules.flatMap(m => m.lessons.map(l => ({ ...l, moduleId: m.id })));
+            const currentIndex = lessons.findIndex(l => l.id === currentLesson);
+
+            if (currentIndex > 0) {
+                const prevLess = lessons[currentIndex - 1];
+                selectModule(prevLess.moduleId, prevLess.id);
+            }
+        }
+
+        function updateProgress() {
+            const totalLessons = courseData.modules.reduce((sum, m) => sum + m.lessons.length, 0);
+            const progress = (completedLessons.length / totalLessons) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        const totalLessons = courseData.modules.reduce((sum, m) => sum + m.lessons.length, 0);
+
+        initializeCourse();
+    </script>
+</body>
+</html>

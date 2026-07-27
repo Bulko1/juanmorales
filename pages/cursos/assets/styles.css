@@ -1,14 +1,18 @@
 body {
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.hidden {
+    display: none;
 }
 
 .quiz-question {
     margin-bottom: 1.5rem;
     padding: 1.5rem;
-    background-color: var(--bs-tertiary-bg);
+    background-color: var(--tertiary-bg);
     border-radius: 0.75rem;
-    border: 1px solid var(--bs-border-color-translucent);
+    border: 1px solid var(--border-color);
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -18,7 +22,7 @@ body {
     height: 0;
     overflow: hidden;
     border-radius: 0.5rem;
-    border: 1px solid var(--bs-border-color-translucent);
+    border: 1px solid var(--border-color);
 }
 
 .video-wrapper iframe {
@@ -27,4 +31,20 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+.quiz-pass {
+    background-color: var(--success-subtle-bg);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.quiz-fail {
+    background-color: var(--danger-subtle-bg);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
 }

@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Función para aplicar el tema
     const applyTheme = (theme) => {
-        docElement.setAttribute('data-bs-theme', theme);
-        sunIcon.classList.toggle('d-none', theme === 'dark');
-        moonIcon.classList.toggle('d-none', theme === 'light');
+        docElement.setAttribute('data-theme', theme);
+        sunIcon.classList.toggle('hidden', theme === 'dark');
+        moonIcon.classList.toggle('hidden', theme === 'light');
         localStorage.setItem('theme', theme);
     };
 
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Evento del botón
     themeToggle.addEventListener('click', () => {
-        const newTheme = docElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+        const newTheme = docElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         applyTheme(newTheme);
     });
 
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 2. Funciones de Navegación ---
     function showSlide(index) {
         slides.forEach((slide, i) => {
-            slide.classList.toggle('d-none', i !== index);
+            slide.classList.toggle('hidden', i !== index);
         });
         
         currentSlide = index;
@@ -66,12 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (currentSlide === totalSlides - 1) {
             btnNext.disabled = true;
-            btnNext.classList.add('d-none');
+            btnNext.classList.add('hidden');
         } else if (currentSlide === 3 && !quizPassed) {
             btnNext.disabled = true;
         } else {
             btnNext.disabled = false;
-            btnNext.classList.remove('d-none');
+            btnNext.classList.remove('hidden');
         }
     }
 
@@ -115,36 +115,36 @@ document.addEventListener('DOMContentLoaded', () => {
             score++;
         }
 
-        quizResults.classList.remove('d-none');
+        quizResults.classList.remove('hidden');
         const passScore = 3;
         
-        quizResults.classList.remove('alert', 'alert-success', 'alert-danger');
+        quizResults.classList.remove('quiz-pass', 'quiz-fail');
         
         if (score >= passScore) {
             quizPassed = true;
             quizResults.innerHTML = '';
             const p1 = document.createElement('p');
-            p1.className = 'fs-5 fw-bold mb-1';
+            p1.style.cssText = 'font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem;';
             p1.textContent = `¡Excelente! Tu puntaje: ${score} / 4`;
             const p2 = document.createElement('p');
-            p2.className = 'mb-0';
+            p2.style.cssText = 'margin: 0;';
             p2.textContent = 'Has aprobado. Ya puedes avanzar a la sección final.';
             quizResults.appendChild(p1);
             quizResults.appendChild(p2);
-            quizResults.classList.add('alert', 'alert-success');
+            quizResults.classList.add('quiz-pass');
             btnScoreQuiz.disabled = true;
         } else {
             quizPassed = false;
             quizResults.innerHTML = '';
             const p1 = document.createElement('p');
-            p1.className = 'fs-5 fw-bold mb-1';
+            p1.style.cssText = 'font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem;';
             p1.textContent = `Tu puntaje: ${score} / 4`;
             const p2 = document.createElement('p');
-            p2.className = 'mb-0';
+            p2.style.cssText = 'margin: 0;';
             p2.textContent = `Necesitas al menos ${passScore} correctas para avanzar. ¡Inténtalo de nuevo!`;
             quizResults.appendChild(p1);
             quizResults.appendChild(p2);
-            quizResults.classList.add('alert', 'alert-danger');
+            quizResults.classList.add('quiz-fail');
         }
         
         updateNavButtons();
@@ -159,11 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.height = 600;
         const ctx = canvas.getContext('2d');
         
-        const isDark = docElement.getAttribute('data-bs-theme') === 'dark';
+        const isDark = docElement.getAttribute('data-theme') === 'dark';
         const bgColor = isDark ? '#212529' : '#ffffff';
         const textColor = isDark ? '#ffffff' : '#333333';
         const primaryColor = isDark ? '#6ea8fe' : '#003366';
-        const accentColor = isDark ? '#f0c04a' : '#f0c04a';
+        const accentColor = '#f0c04a';
 
         ctx.fillStyle = bgColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);

@@ -20,22 +20,23 @@ JM/
 │   ├── css/indicadores.css           # Estilos del dashboard de indicadores
 │   ├── js/indicadores.js             # Lógica de consumo de API para indicadores
 │   ├── img/perfil.jpeg               # Imagen de perfil
-│   ├── fonts/NotoSans-Light.ttf      # Fuente local
-│   └── vendor/bootstrap/             # Bootstrap 5 (compartido entre subproyectos)
+│   └── fonts/NotoSans-Light.ttf      # Fuente local
 │
 └── pages/                            # Proyectos standalone
     ├── cursos/                       # Cursos interactivos
     │   ├── index.html                # Landing con 3 cursos
-    │   ├── rapid-learning.html       # Rapid Learning (versión Bootstrap)
+    │   ├── rapid-learning.html       # Rapid Learning (versión CSS puro)
     │   ├── seguridad.html            # Curso de Seguridad en Hogar y Oficina
     │   ├── guia.md
     │   └── assets/                   # JS y CSS locales del curso
-    ├── indices-api/                  # Dashboard de indicadores (versión Bootstrap)
+    ├── reproductor-musica/           # Reproductor de música con playlist
     │   ├── index.html
-    │   ├── scripts.js
-    │   └── styles.css
-    └── rock/                         # Árbol genealógico del Rock
-        └── index.html
+    │   ├── styles.css
+    │   └── app.js
+    ├── markdown/                     # Editor Markdown en vivo (CSS puro)
+    │   ├── index.html
+    │   ├── parser.js
+    │   └── app.js
     └── herramientas/                 # Herramientas web
         ├── index.html                # Landing con 6 herramientas
         ├── generador-contrasenas.html
@@ -54,9 +55,9 @@ JM/
 | RL.html | Curso Rapid Learning con quiz y certificado | HTML/CSS/JS + Canvas API | Abrir `RL.html` |
 | Encuesta | Formulario de satisfacción interactivo | HTML/CSS/JS | Abrir `Encuesta.html` |
 | Indicadores | Dashboard de indicadores económicos | HTML/CSS/JS + API REST | Abrir `Indicadores.html` |
-| Cursos | 3 cursos interactivos con quizzes y certificados | HTML/CSS/JS + Bootstrap 5 | `pages/cursos/` |
-| Indicadores API | Dashboard Bootstrap con API en tiempo real | HTML/CSS/JS + Bootstrap 5 | `pages/indices-api/index.html` |
-| Rock Timeline | Línea de tiempo interactiva del rock | HTML + Tailwind CSS CDN | `pages/rock/index.html` |
+| Cursos | 3 cursos interactivos con quizzes y certificados | HTML/CSS/JS + Canvas API | `pages/cursos/` |
+| Editor Markdown | Editor en vivo con parser GFM, export y autoguardado | HTML/CSS/JS puro | `pages/markdown/index.html` |
+| Reproductor Música | Reproductor de audio con playlist dinámica y drag & drop | HTML/CSS/JS + Web Audio API | `pages/reproductor-musica/` |
 | Herramientas | 6 utilidades web (contraseñas, palabras, unidades, tareas, paletas, imágenes) | HTML/CSS/JS | `pages/herramientas/` |
 
 ## Tecnologías
@@ -64,8 +65,6 @@ JM/
 - **HTML5** semántico y accesible
 - **CSS3** con variables CSS, Grid, Flexbox, glassmorphism
 - **JavaScript** vanilla (ES6+)
-- **Bootstrap 5** (compartido en `assets/vendor/bootstrap/`)
-- **Tailwind CSS** vía CDN (solo en `pages/rock/`)
 - **Canvas API** para manipulación de imágenes y certificados
 - **Web Crypto API** para generación criptográfica de contraseñas
 - **Nginx** como servidor en contenedor Docker

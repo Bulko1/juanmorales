@@ -4,24 +4,66 @@
     --card-radius: 14px;
     --card-gap: 2rem;
 }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+}
 body.dark-mode {
     background-color: #0b1020;
     color: #e6eef8;
 }
-.dark-mode .card {
-    background-color: #111318;
-    color: #e6eef8;
-    border: 1px solid #263044;
+body:not(.dark-mode) {
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+.header-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+.header-title {
+    text-align: center;
+    width: 100%;
+}
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1.5rem;
+}
+@media (max-width: 575px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
 }
 .card {
     border-radius: var(--card-radius);
     border: var(--card-border);
     box-shadow: 0 10px 20px rgba(2, 6, 23, 0.45);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
-    margin-bottom: var(--card-gap);
     display: flex;
     flex-direction: column;
     min-height: 120px;
+}
+body.dark-mode .card {
+    background-color: #111318;
+    color: #e6eef8;
+    border: 1px solid #263044;
+}
+body:not(.dark-mode) .card {
+    background-color: #ffffff;
+    border: var(--card-border);
 }
 .card:hover {
     transform: translateY(-6px);
@@ -65,17 +107,10 @@ body.dark-mode {
 #theme-icon {
     font-size: 1.05rem;
 }
-
-#Home-icon {
-    font-size: 1.05rem;
-}
-/* Increase gaps between grid cells */
-.g-custom {
-    gap: 2rem 1.5rem; /* row-gap column-gap */
-}
-/* Responsive: force 1 column on xs, 2 columns on sm+ */
-@media (min-width: 576px) {
-    .cards-cols {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.error-alert {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 1rem 1.25rem;
+    border-radius: 0.5rem;
+    border: 1px solid #dc3545;
 }

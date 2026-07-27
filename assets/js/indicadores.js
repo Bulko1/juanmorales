@@ -69,7 +69,7 @@ function handleFetchError(error) {
     console.error('Error fetching data:', error);
     const container = document.getElementById('cards-container');
     const alertDiv = document.createElement('div');
-    alertDiv.className = 'alert alert-danger';
+    alertDiv.className = 'error-alert';
     alertDiv.setAttribute('role', 'alert');
     alertDiv.setAttribute('aria-live', 'assertive');
     alertDiv.textContent = 'No se pudieron cargar los datos. Por favor, verifica tu conexión a internet o intenta nuevamente más tarde.';
